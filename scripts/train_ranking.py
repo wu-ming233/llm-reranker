@@ -71,7 +71,12 @@ def main():
     
     accelerator.wait_for_everyone()
     
-    if args.config_name:
+    if args.resume_from_checkpoint:
+        config = AutoConfig.from_pretrained(
+            args.resume_from_checkpoint, cache_dir=args.cache_dir,
+            trust_remote_code=args.trust_remote_code
+        )
+    elif args.config_name:
         config = AutoConfig.from_pretrained(
             args.config_name, cache_dir=args.cache_dir,
             trust_remote_code=args.trust_remote_code,
@@ -85,7 +90,11 @@ def main():
         config = CONFIG_MAPPING[args.model_type]()
         logger.warning("You are instantiating a new config instance from scratch.")
 
-    if args.tokenizer_name:
+    if args.resume_from_checkpoint:
+        tokenizer = AutoTokenizer.from_pretrained(
+            args.resume_from_checkpoint, use_fast=True, cache_dir=args.cache_dir, trust_remote_code=args.trust_remote_code
+        )
+    elif args.tokenizer_name:
         tokenizer = AutoTokenizer.from_pretrained(
             args.tokenizer_name, use_fast=True, cache_dir=args.cache_dir, trust_remote_code=args.trust_remote_code
         )
@@ -99,7 +108,18 @@ def main():
             "You can do it from another script, save it, and load it from here, using --tokenizer_name."
         )
     
-    if args.model_name_or_path:
+    if args.resume_from_checkpoint:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.resume_from_checkpoint,
+            from_tf=bool(".ckpt" in args.model_name_or_path),
+            cache_dir=args.cache_dir,
+            config=config,
+            attn_implementation="flash_attention_2",
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=args.low_cpu_mem_usage,
+            trust_remote_code=args.trust_remote_code,
+        )
+    elif args.model_name_or_path:
         model = AutoModelForCausalLM.from_pretrained(
             args.model_name_or_path,
             from_tf=bool(".ckpt" in args.model_name_or_path),
@@ -267,7 +287,7 @@ def main():
             path = os.path.basename(checkpoint_path)
 
         accelerator.print(f"Resumed from checkpoint: {checkpoint_path}")
-        accelerator.load_state(checkpoint_path)
+        # accelerator.load_state(checkpoint_path)
         # Extract `epoch_{i}` or `step_{i}`
         training_difference = os.path.splitext(path)[0]
 

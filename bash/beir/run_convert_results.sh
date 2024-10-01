@@ -2,7 +2,8 @@ data_dir=${REPO_DIR}/datasets/beir/
 output_dir=${REPO_DIR}/outputs/beir/
 
 # List of datasets to process
-datasets=('trec-covid') # 'climate-fever' 'fever' 'hotpotqa' 'msmarco' 'nfcorpus' 'nq' 'fiqa' 'scidocs' 'scifact' 'dbpedia-entity'
+
+datasets=('dbpedia-entity') # 'msmarco' 'trec-covid' 'climate-fever' 'fever' 'hotpotqa' 'nfcorpus' 'nq' 'fiqa' 'scidocs' 'scifact'
 
 # Iterate over datasets and process each one
 for datasets in "${datasets[@]}"; do

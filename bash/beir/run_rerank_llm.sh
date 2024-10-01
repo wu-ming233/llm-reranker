@@ -3,14 +3,14 @@
 # Set directories and model
 DATA_DIR="${REPO_DIR}/datasets/beir/"
 OUTPUT_DIR="${REPO_DIR}/outputs/beir/"
-MODEL_IN_USE="rryisthebest/First_Model"
+MODEL_IN_USE="rryisthebest/First_Model" # rryisthebest/First_Model
 
 # Configuration flags
 USE_LOGITS=1  # Whether to use FIRST single token logit decoding
 USE_ALPHA=1   # Whether to use Alphabetic Identifiers
 
 # List of datasets to rerank
-DATASETS=('dbpedia-entity') # 'climate-fever' 'fever' 'hotpotqa' 'msmarco' 'nfcorpus' 'nq' 'fiqa' 'scidocs' 'scifact' 'trec-covid'
+DATASETS=('hotpotqa' 'nfcorpus) # 'climate-fever' 'dbpedia-entity' 'msmarco' 'fever' 'nq' 'fiqa' 'scidocs' 'scifact' 'trec-covid'
 
 # Iterate over datasets and rerank each one
 for DATASET in "${DATASETS[@]}"; do
